@@ -5,7 +5,7 @@ import time
 class LCD:
     lines = [' ', ' ', ' ', ' ']
     lines_dirty = False
-    reset_counter = 30
+    reset_counter = 1800
 
     def __init__(self):
         self.setup_gpio()
@@ -34,10 +34,8 @@ class LCD:
         if not self.reset_counter:
             self.send_nibble(0x00)
             self.send_nibble(0x10)
-            self.reset_counter = 30
-            print 'Resetting'
+            self.reset_counter = 1800
         else:
-            print 'Dirty!'
             self.send_nibble(0x00)
             self.send_nibble(0x20)
             self.reset_counter -= 1
@@ -52,7 +50,6 @@ class LCD:
     def set_lines(self, new_lines):
         for i in range (0, 4):
             if new_lines[i] != self.lines[i]:
-                print new_lines[i]
                 self.lines[i] = new_lines[i]
                 self.lines_dirty = True
 
@@ -67,6 +64,7 @@ class LCD:
 
     def setup_gpio(self):
         gpio.setmode(gpio.BCM)
+        gpio.setwarnings(False)
         gpio.setup(17, gpio.OUT)
         gpio.setup(18, gpio.OUT)
         gpio.setup(27, gpio.OUT)
